@@ -1,42 +1,23 @@
-import Link from "next/link"
-import { Button } from "../ui/button"
-import { useRouter } from "next/router"
-import { cn } from "@/lib/utils"
+import Link from 'next/link';
+import { Button } from '../ui/button';
+import { ActiveLink } from '../active-link';
 
 export const Header = () => {
-    const router = useRouter();
+  return (
+    <header className="bg-backgroud/95 supports-[backdrop-filter]:bg-backgroud/60 fixed top-0 z-50 w-full border-b border-white/10 backdrop-blur">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-80">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/">Logo</Link>
 
-    const isHomePage = router.pathname === '/';
-    const isBlogPage = router.pathname === '/blog';
-
-    return(
-        <header className="fixed top-0 z-50 w-full border-b border-white/10 bg-backgroud/95 backdrop-blur supports-[backdrop-filter]:bg-backgroud/60">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-80">
-                <div className="flex h-16 items-center justify-between">
-                    <Link href="/">Logo</Link>
-
-                    <nav className="flex items-center gap-5">
-                        <Link
-                            href="/"
-                            className={cn(
-                                'text-sm font-medium transition-colors hover:text-blue-500', isHomePage ? 'text-blue-500' : 'text-muted-foreground'
-                            )}
-                        >
-                            Início
-                        </Link>
-                        <Link
-                            href="/blog"
-                            className={cn(
-                                'text-sm font-medium transition-colors hover:text-blue-500',
-                                isBlogPage ? 'text-blue-500' : 'text-muted-foreground'
-                            )}
-                        >
-                            Blog
-                        </Link>
-                        <Button variant="secondary">Começar</Button>
-                    </nav>
-                </div>
-            </div>
-        </header>
-    )
-}
+          <nav className="flex items-center gap-5">
+            <ActiveLink href="/">Início</ActiveLink>
+            <ActiveLink href="/blog">Blog</ActiveLink>
+            <Button variant="secondary" asChild>
+              <Link href="/começar">Começar</Link>
+            </Button>
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+};
