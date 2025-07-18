@@ -1,39 +1,40 @@
-import { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { FlatCompat } from '@eslint/eslintrc';
+import tailwind from 'eslint-plugin-tailwindcss';
 
 // Plugins em ESM precisam ser importados manualmente
-import tailwindPlugin from "eslint-plugin-tailwindcss";
-import eslintPluginPrettier from "eslint-plugin-prettier";
-import eslintConfigPrettier from "eslint-config-prettier/flat";
-import typescriptPlugin from "@typescript-eslint/eslint-plugin";
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 
 // Helpers
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
-export default [
+const config = [
   // Configs oficiais do Next 15
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...tailwind.configs['flat/recommended'],
 
-  // Tailwind — apenas em arquivos de UI
+  // Se você já usa prettier‑plugin‑tailwindcss para ordenar classes,
+  // desligue a regra de ordenação para evitar conflitos:
   {
-    files: ["**/*.{ts,tsx,jsx,js}"],
-    plugins: { tailwindcss: tailwindPlugin },
-    extends: ["plugin:tailwindcss/recommended"],
     rules: {
-      "tailwindcss/no-custom-classname": "off", // ajuste se usar nomes fora do config
+      'tailwindcss/classnames-order': 'off',
+      // alerta de classe desconhecida como *erro*
+      'tailwindcss/no-custom-classname': 'off',
     },
   },
 
   // TypeScript extra — ex.: no-unused-vars já considera overloads
   {
-    plugins: { "@typescript-eslint": typescriptPlugin },
+    plugins: { '@typescript-eslint': typescriptPlugin },
     rules: {
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        { argsIgnorePattern: "^_" },
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
       ],
     },
   },
@@ -42,6 +43,8 @@ export default [
   eslintConfigPrettier,
   {
     plugins: { prettier: eslintPluginPrettier },
-    rules: { "prettier/prettier": "error" },
+    rules: { 'prettier/prettier': 'error' },
   },
 ];
+
+export default config;
